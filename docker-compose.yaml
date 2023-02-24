@@ -1,0 +1,38 @@
+---
+version: "3.8"
+
+services:
+
+  dolfinx:
+    build:
+      context: .
+      dockerfile: base.Dockerfile
+    container_name: dolfinx
+    hostname: dolfinx
+    command: sshd
+    # command: jupyterlab
+    ports:
+      - target: 8892
+        published: 8892
+        mode: host
+    volumes:
+      - type: bind
+        source: ./data
+        target: /workspace
+    # network_mode: host
+    environment:
+      # Port to start Jupyter Lab (default: 8888)
+      JUPYTERLAB_PORT: 8892
+    networks:
+      main-network:
+        ipv4_address: 10.5.0.6
+    restart: always
+
+
+networks:
+  main-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
