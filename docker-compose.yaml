@@ -9,9 +9,13 @@ services:
       dockerfile: base.Dockerfile
     container_name: dolfinx
     hostname: dolfinx
+    # dns: 8.8.8.8
     command: sshd
     # command: jupyterlab
     ports:
+      - target: 22
+        published: 22
+        mode: host
       - target: 8892
         published: 8892
         mode: host
@@ -25,14 +29,17 @@ services:
       JUPYTERLAB_PORT: 8892
     networks:
       main-network:
-        ipv4_address: 10.5.0.6
+        ipv4_address: 172.25.0.7
     restart: always
 
 
 networks:
   main-network:
+    name: main-network
     driver: bridge
+    # external: false
     ipam:
       config:
-        - subnet: 10.5.0.0/16
-          gateway: 10.5.0.1
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
+    attachable: true
